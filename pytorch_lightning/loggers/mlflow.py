@@ -127,8 +127,8 @@ class MLFlowLogger(LightningLoggerBase):
         self._tracking_uri = tracking_uri
         self._run_id = None
         if run_name:
-            self.tags = self.tags or {}
-            self.tags[MLFLOW_RUN_NAME] = run_name
+            tags = tags or {}
+            tags[MLFLOW_RUN_NAME] = run_name
         self.tags = tags
         self._prefix = prefix
         self._artifact_location = artifact_location
