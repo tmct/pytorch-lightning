@@ -31,6 +31,7 @@ try:
     import mlflow
     from mlflow.tracking import MlflowClient
     from mlflow.tracking import context
+    from mlflow.utils.mlflow_tags import MLFLOW_RUN_NAME
 # todo: there seems to be still some remaining import error with Conda env
 except ImportError:
     _MLFLOW_AVAILABLE = False
@@ -93,6 +94,7 @@ class MLFlowLogger(LightningLoggerBase):
         prefix: A string to put at the beginning of metric keys.
         artifact_location: The location to store run artifacts. If not provided, the server picks an appropriate
             default.
+        run_name: A name for the newly created mlflow run
 
     Raises:
         ImportError:
@@ -109,6 +111,7 @@ class MLFlowLogger(LightningLoggerBase):
         save_dir: Optional[str] = './mlruns',
         prefix: str = '',
         artifact_location: Optional[str] = None,
+        run_name: Optional[str] = None,
     ):
         if mlflow is None:
             raise ImportError(
@@ -123,6 +126,9 @@ class MLFlowLogger(LightningLoggerBase):
         self._experiment_id = None
         self._tracking_uri = tracking_uri
         self._run_id = None
+        if run_name:
+            self.tags = self.tags or {}
+            self.tags[MLFLOW_RUN_NAME] = run_name
         self.tags = tags
         self._prefix = prefix
         self._artifact_location = artifact_location
